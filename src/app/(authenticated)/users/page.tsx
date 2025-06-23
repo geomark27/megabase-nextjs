@@ -85,17 +85,44 @@ export default function UsersPage() {
         params.append('role_id', selectedRole)
       }
 
+      console.log('🔄 Cargando usuarios con parámetros:', params.toString())
+
       // Hacer petición a la API
       const response = await api.get(`/users?${params.toString()}`)
       
-      if (response.data.success) {
-        setUsers(response.data.data || [])
-        console.log('✅ Usuarios cargados:', response.data.data?.length || 0)
+      console.log('📥 Respuesta completa del servidor:', response.data)
+      
+      // Corregir: verificar response.data.status === 'success' en lugar de response.data.success
+      if (response.data.status === 'success') {
+        // Los usuarios están en response.data.data.users
+        const userData = response.data.data
+        const usersList = userData?.users || []
+        setUsers(usersList)
+        console.log('✅ Usuarios cargados:', usersList.length, 'usuarios')
+        console.log('📊 Datos completos:', userData)
+        
+        // Si no hay usuarios, mostrar información para debugging
+        if (usersList.length === 0) {
+          console.log('⚠️ No se encontraron usuarios. Estructura de respuesta:', {
+            status: response.data.status,
+            message: response.data.message,
+            dataKeys: Object.keys(response.data.data || {}),
+            userData: userData
+          })
+        }
       } else {
-        setError('No se pudieron cargar los usuarios')
+        console.error('❌ Respuesta del servidor indica fallo:', response.data)
+        setError(response.data.message || 'No se pudieron cargar los usuarios')
       }
     } catch (err: any) {
-      console.error('❌ Error cargando usuarios:', err)
+      console.error('❌ Error en la petición:', err)
+      console.error('❌ Detalles del error:', {
+        message: err.message,
+        status: err.status,
+        data: err.data,
+        isApiError: err.isApiError,
+        isNetworkError: err.isNetworkError
+      })
       setError(err.message || 'Error de conexión al cargar usuarios')
     } finally {
       setIsLoading(false)
@@ -114,7 +141,8 @@ export default function UsersPage() {
         is_active: !currentStatus
       })
 
-      if (response.data.success) {
+      // Usar la misma verificación de status
+      if (response.data.status === 'success') {
         // Actualizar la lista local
         setUsers(prev => prev.map(user => 
           user.id === userId 
@@ -144,7 +172,8 @@ export default function UsersPage() {
 
       const response = await api.delete(`/users/${userId}`)
 
-      if (response.data.success) {
+      // Usar la misma verificación de status
+      if (response.data.status === 'success') {
         // Remover de la lista local
         setUsers(prev => prev.filter(user => user.id !== userId))
         console.log(`✅ Usuario ${userName} eliminado`)
