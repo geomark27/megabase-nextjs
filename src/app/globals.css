@@ -43,80 +43,163 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* TEMA CLARO (Light Mode) */
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  
+  /* Colores principales */
+  --background: oklch(83.591% 0.0001 271.152);                     /* Blanco puro */
+  --foreground: oklch(0.145 0 0);                 /* Negro para texto */
+  
+  /* Tarjetas */
+  --card: oklch(1 0 0);                           /* Blanco para tarjetas */
+  --card-foreground: oklch(0.145 0 0);            /* Negro para texto en tarjetas */
+  
+  /* Popover */
+  --popover: oklch(1 0 0);                        /* Blanco para popovers */
+  --popover-foreground: oklch(0.145 0 0);         /* Negro para texto en popovers */
+  
+  /* Primario */
+  --primary: oklch(0.205 0 0);                    /* Color primario oscuro */
+  --primary-foreground: oklch(0.985 0 0);         /* Texto sobre primario */
+  
+  /* Secundario */
+  --secondary: oklch(0.97 0 0);                   /* Gris muy claro */
+  --secondary-foreground: oklch(0.205 0 0);       /* Texto sobre secundario */
+  
+  /* Silenciado */
+  --muted: oklch(0.97 0 0);                       /* Gris claro */
+  --muted-foreground: oklch(0.556 0 0);           /* Gris medio para texto silenciado */
+  
+  /* Acento */
+  --accent: oklch(0.97 0 0);                      /* Gris claro para acentos */
+  --accent-foreground: oklch(0.205 0 0);          /* Texto sobre acentos */
+  
+  /* Destructivo */
+  --destructive: oklch(0.577 0.245 27.325);       /* Rojo para acciones destructivas */
+  
+  /* Bordes e inputs */
+  --border: oklch(0.922 0 0);                     /* Gris claro para bordes */
+  --input: oklch(0.922 0 0);                      /* Gris claro para inputs */
+  --ring: oklch(0.708 0 0);                       /* Gris medio para rings */
+  
+  /* Charts */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  
+  /* Sidebar */
+  --sidebar: oklch(0.985 0 0);                    /* Casi blanco para sidebar */
+  --sidebar-foreground: oklch(0.145 0 0);         /* Negro para texto en sidebar */
+  --sidebar-primary: oklch(0.205 0 0);            /* Primario en sidebar */
+  --sidebar-primary-foreground: oklch(0.985 0 0); /* Texto sobre primario en sidebar */
+  --sidebar-accent: oklch(0.97 0 0);              /* Acento en sidebar */
+  --sidebar-accent-foreground: oklch(0.205 0 0);  /* Texto sobre acento en sidebar */
+  --sidebar-border: oklch(0.922 0 0);             /* Borde del sidebar */
+  --sidebar-ring: oklch(0.708 0 0);               /* Ring del sidebar */
 }
 
+/* TEMA OSCURO ELEGANTE (Dark Mode) - MÁS ARMONIOSO */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Colores principales - Tonos más suaves y armoniosos */
+  --background: oklch(19.567% 0.01862 245.395);            /* Azul muy oscuro, más cálido */
+  --foreground: oklch(0.92 0.02 240);             /* Blanco ligeramente azulado */
+  
+  /* Tarjetas - Gradación sutil */
+  --card: oklch(0.11 0.02 240);                   /* Ligeramente más claro que el fondo */
+  --card-foreground: oklch(0.90 0.02 240);        /* Texto claro con tinte azul */
+  
+  /* Popover */
+  --popover: oklch(0.12 0.02 240);                /* Más claro para popovers */
+  --popover-foreground: oklch(0.90 0.02 240);     /* Texto consistente */
+  
+  /* Primario - Azul elegante */
+  --primary: oklch(0.65 0.15 240);                /* Azul vibrante pero suave */
+  --primary-foreground: oklch(0.95 0.01 240);     /* Texto claro sobre primario */
+  
+  /* Secundario - Gris azulado */
+  --secondary: oklch(0.15 0.02 240);              /* Gris oscuro con tinte azul */
+  --secondary-foreground: oklch(0.85 0.02 240);   /* Texto claro */
+  
+  /* Silenciado - Tonos medios armoniosos */
+  --muted: oklch(0.13 0.02 240);                  /* Gris oscuro azulado */
+  --muted-foreground: oklch(0.55 0.03 240);       /* Gris medio con tinte */
+  
+  /* Acento - Hover states elegantes */
+  --accent: oklch(0.16 0.03 240);                 /* Ligeramente más claro para hover */
+  --accent-foreground: oklch(0.88 0.02 240);      /* Texto sobre acento */
+  
+  /* Destructivo - Rojo más suave */
+  --destructive: oklch(0.60 0.20 15);             /* Rojo coral elegante */
+  
+  /* Bordes e inputs - Sutiles pero visibles */
+  --border: oklch(0.18 0.02 240);                 /* Bordes sutiles azulados */
+  --input: oklch(0.14 0.02 240);                  /* Inputs ligeramente diferentes */
+  --ring: oklch(0.45 0.10 240);                   /* Ring azul suave */
+  
+  /* Charts - Colores vibrantes pero armoniosos */
+  --chart-1: oklch(0.70 0.18 50);                /* Amarillo dorado */
+  --chart-2: oklch(0.65 0.15 180);               /* Azul cyan */
+  --chart-3: oklch(0.60 0.12 280);               /* Púrpura */
+  --chart-4: oklch(0.68 0.16 120);               /* Verde esmeralda */
+  --chart-5: oklch(0.72 0.14 20);                /* Naranja coral */
+  
+  /* Sidebar - Integrado armoniosamente */
+  --sidebar: oklch(0.08 0.015 240);               /* Más oscuro que el fondo principal */
+  --sidebar-foreground: oklch(0.88 0.02 240);     /* Texto claro */
+  --sidebar-primary: oklch(0.65 0.15 240);        /* Azul primario */
+  --sidebar-primary-foreground: oklch(0.95 0.01 240); /* Texto sobre primario */
+  --sidebar-accent: oklch(0.14 0.02 240);         /* Acento sutil */
+  --sidebar-accent-foreground: oklch(0.85 0.02 240);  /* Texto sobre acento */
+  --sidebar-border: oklch(0.16 0.02 240);         /* Bordes sutiles */
+  --sidebar-ring: oklch(0.45 0.10 240);           /* Ring consistente */
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+/* Transiciones suaves para el cambio de tema */
+* {
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Asegurar que el cuerpo tenga el color de fondo correcto */
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+/* Gradiente sutil para el fondo en modo dark */
+.dark body {
+  background: linear-gradient(135deg, 
+    oklch(0.09 0.015 240) 0%, 
+    oklch(0.085 0.02 250) 50%,
+    oklch(0.095 0.01 230) 100%);
+  background-attachment: fixed;
+}
+
+/* Mejores shadows para modo dark */
+.dark .shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.dark .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+/* Glass effect para tarjetas en modo dark */
+.dark .bg-card {
+  background: oklch(0.11 0.02 240 / 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid oklch(0.18 0.02 240 / 0.5);
+}
+
+/* Mejores hover effects */
+.dark button:hover,
+.dark .hover\:bg-accent:hover {
+  background: oklch(0.16 0.03 240 / 0.8);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }

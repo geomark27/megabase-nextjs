@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Eye, EyeOff, Shield, Mail, User, Lock, Save, X } from 'lucide-react'
+import { Eye, EyeOff, Shield, Mail, User, Lock, Save, X, CheckCircle2, AlertCircle } from 'lucide-react'
 import { api } from '@/lib/axios'
 import { getErrorMessage } from '@/lib/axios'
 import { API_ENDPOINTS } from '@/config/api'
@@ -50,13 +50,12 @@ interface UserFormProps {
 }
 
 /**
- * UserForm Component
+ * UserForm Component con diseño elegante
  * 
  * Formulario reutilizable para crear y editar usuarios
- * - Maneja create y edit en el mismo componente
- * - Validación en tiempo real
- * - Verificación de disponibilidad de username/email
- * - Indicadores visuales de estado
+ * - Aplicando el estilo armonioso del dashboard
+ * - Variables semánticas de colores
+ * - Efectos visuales elegantes
  */
 export function UserForm({ mode, user, onSuccess, onCancel }: UserFormProps) {
   
@@ -392,286 +391,350 @@ export function UserForm({ mode, user, onSuccess, onCancel }: UserFormProps) {
   const passwordStrength = formData.password ? getPasswordStrength(formData.password) : null
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-8">
       
-      {/* Error general */}
+      {/* Error general elegante */}
       {errors.general && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-800">{errors.general}</p>
+        <div className="relative group">
+          <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-transparent rounded-xl blur-xl"></div>
+          <div className="relative bg-red-500/10 backdrop-blur-sm border border-red-500/20 rounded-xl p-4">
+            <div className="flex items-center space-x-3">
+              <AlertCircle className="w-5 h-5 text-red-400" />
+              <p className="text-red-400">{errors.general}</p>
+            </div>
+          </div>
         </div>
       )}
 
       {/* Información personal */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium text-gray-900">Información Personal</h3>
-        
-        {/* Nombre completo */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Nombre Completo *
-          </label>
-          <div className="relative">
-            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.name ? 'border-red-300' : 'border-gray-300'
-              }`}
-              placeholder="Ej: Juan Pérez García"
-            />
-          </div>
-          {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
-        </div>
+      <div className="space-y-6">
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent rounded-xl blur-xl"></div>
+          <div className="relative bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-6">
+            <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center space-x-2">
+              <User className="w-5 h-5 text-primary" />
+              <span>Información Personal</span>
+            </h3>
+            
+            {/* Nombre completo */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-foreground mb-2">
+                Nombre Completo *
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className={`w-full pl-10 pr-4 py-3 bg-background/50 border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all ${
+                    errors.name ? 'border-red-500/50 bg-red-500/5' : 'border-border/50'
+                  }`}
+                  placeholder="Ej: Juan Pérez García"
+                />
+              </div>
+              {errors.name && (
+                <p className="text-red-400 text-sm mt-2 flex items-center space-x-1">
+                  <AlertCircle className="w-3 h-3" />
+                  <span>{errors.name}</span>
+                </p>
+              )}
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          
-          {/* Username */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Nombre de Usuario *
-            </label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">@</span>
-              <input
-                type="text"
-                name="user_name"
-                value={formData.user_name}
-                onChange={handleChange}
-                className={`w-full pl-8 pr-10 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.user_name ? 'border-red-300' : 
-                  usernameAvailable === false ? 'border-red-300' :
-                  usernameAvailable === true ? 'border-green-300' : 'border-gray-300'
-                }`}
-                placeholder="jperez"
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               
-              {/* Indicador de disponibilidad */}
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                {isCheckingUsername && (
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                )}
-                {!isCheckingUsername && usernameAvailable === true && (
-                  <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs">✓</span>
+              {/* Username */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Nombre de Usuario *
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground text-sm">@</span>
+                  <input
+                    type="text"
+                    name="user_name"
+                    value={formData.user_name}
+                    onChange={handleChange}
+                    className={`w-full pl-8 pr-12 py-3 bg-background/50 border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all ${
+                      errors.user_name ? 'border-red-500/50 bg-red-500/5' : 
+                      usernameAvailable === false ? 'border-red-500/50 bg-red-500/5' :
+                      usernameAvailable === true ? 'border-green-500/50 bg-green-500/5' : 'border-border/50'
+                    }`}
+                    placeholder="jperez"
+                  />
+                  
+                  {/* Indicador de disponibilidad elegante */}
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    {isCheckingUsername && (
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary/20 border-t-primary"></div>
+                    )}
+                    {!isCheckingUsername && usernameAvailable === true && (
+                      <CheckCircle2 className="w-4 h-4 text-green-400" />
+                    )}
+                    {!isCheckingUsername && usernameAvailable === false && (
+                      <AlertCircle className="w-4 h-4 text-red-400" />
+                    )}
                   </div>
+                </div>
+                {errors.user_name && (
+                  <p className="text-red-400 text-sm mt-2 flex items-center space-x-1">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>{errors.user_name}</span>
+                  </p>
                 )}
-                {!isCheckingUsername && usernameAvailable === false && (
-                  <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs">✗</span>
+                {usernameAvailable === false && !errors.user_name && (
+                  <p className="text-red-400 text-sm mt-2">Este nombre de usuario no está disponible</p>
+                )}
+                {usernameAvailable === true && (
+                  <p className="text-green-400 text-sm mt-2 flex items-center space-x-1">
+                    <CheckCircle2 className="w-3 h-3" />
+                    <span>Nombre de usuario disponible</span>
+                  </p>
+                )}
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Correo Electrónico *
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={`w-full pl-10 pr-12 py-3 bg-background/50 border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all ${
+                      errors.email ? 'border-red-500/50 bg-red-500/5' : 
+                      emailAvailable === false ? 'border-red-500/50 bg-red-500/5' :
+                      emailAvailable === true ? 'border-green-500/50 bg-green-500/5' : 'border-border/50'
+                    }`}
+                    placeholder="juan@ejemplo.com"
+                  />
+                  
+                  {/* Indicador de disponibilidad elegante */}
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    {isCheckingEmail && (
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary/20 border-t-primary"></div>
+                    )}
+                    {!isCheckingEmail && emailAvailable === true && (
+                      <CheckCircle2 className="w-4 h-4 text-green-400" />
+                    )}
+                    {!isCheckingEmail && emailAvailable === false && (
+                      <AlertCircle className="w-4 h-4 text-red-400" />
+                    )}
                   </div>
+                </div>
+                {errors.email && (
+                  <p className="text-red-400 text-sm mt-2 flex items-center space-x-1">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>{errors.email}</span>
+                  </p>
+                )}
+                {emailAvailable === false && !errors.email && (
+                  <p className="text-red-400 text-sm mt-2">Este email ya está registrado</p>
+                )}
+                {emailAvailable === true && (
+                  <p className="text-green-400 text-sm mt-2 flex items-center space-x-1">
+                    <CheckCircle2 className="w-3 h-3" />
+                    <span>Email disponible</span>
+                  </p>
                 )}
               </div>
             </div>
-            {errors.user_name && <p className="text-red-600 text-sm mt-1">{errors.user_name}</p>}
-            {usernameAvailable === false && !errors.user_name && (
-              <p className="text-red-600 text-sm mt-1">Este nombre de usuario no está disponible</p>
-            )}
-            {usernameAvailable === true && (
-              <p className="text-green-600 text-sm mt-1">Nombre de usuario disponible</p>
-            )}
-          </div>
-
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Correo Electrónico *
-            </label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.email ? 'border-red-300' : 
-                  emailAvailable === false ? 'border-red-300' :
-                  emailAvailable === true ? 'border-green-300' : 'border-gray-300'
-                }`}
-                placeholder="juan@ejemplo.com"
-              />
-              
-              {/* Indicador de disponibilidad */}
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                {isCheckingEmail && (
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                )}
-                {!isCheckingEmail && emailAvailable === true && (
-                  <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs">✓</span>
-                  </div>
-                )}
-                {!isCheckingEmail && emailAvailable === false && (
-                  <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs">✗</span>
-                  </div>
-                )}
-              </div>
-            </div>
-            {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
-            {emailAvailable === false && !errors.email && (
-              <p className="text-red-600 text-sm mt-1">Este email ya está registrado</p>
-            )}
-            {emailAvailable === true && (
-              <p className="text-green-600 text-sm mt-1">Email disponible</p>
-            )}
           </div>
         </div>
       </div>
 
       {/* Seguridad */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium text-gray-900">
-          {mode === 'create' ? 'Configuración de Acceso' : 'Cambiar Contraseña (opcional)'}
-        </h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          
-          {/* Contraseña */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {mode === 'create' ? 'Contraseña *' : 'Nueva Contraseña'}
-            </label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.password ? 'border-red-300' : 'border-gray-300'
-                }`}
-                placeholder={mode === 'create' ? 'Mínimo 6 caracteres' : 'Dejar vacío para mantener actual'}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
-            </div>
+      <div className="space-y-6">
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent rounded-xl blur-xl"></div>
+          <div className="relative bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-6">
+            <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center space-x-2">
+              <Lock className="w-5 h-5 text-primary" />
+              <span>{mode === 'create' ? 'Configuración de Acceso' : 'Cambiar Contraseña (opcional)'}</span>
+            </h3>
             
-            {/* Indicador de fortaleza */}
-            {passwordStrength && formData.password && (
-              <div className="mt-2">
-                <div className="flex items-center space-x-2">
-                  <div className="flex-1 bg-gray-200 rounded-full h-2">
-                    <div
-                      className={`h-full rounded-full ${passwordStrength.color} transition-all duration-300`}
-                      style={{ width: `${(passwordStrength.strength / 6) * 100}%` }}
-                    ></div>
-                  </div>
-                  <span className="text-xs text-gray-600">{passwordStrength.label}</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              {/* Contraseña */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  {mode === 'create' ? 'Contraseña *' : 'Nueva Contraseña'}
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className={`w-full pl-10 pr-12 py-3 bg-background/50 border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all ${
+                      errors.password ? 'border-red-500/50 bg-red-500/5' : 'border-border/50'
+                    }`}
+                    placeholder={mode === 'create' ? 'Mínimo 6 caracteres' : 'Dejar vacío para mantener actual'}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
+                
+                {/* Indicador de fortaleza elegante */}
+                {passwordStrength && formData.password && (
+                  <div className="mt-3">
+                    <div className="flex items-center space-x-3">
+                      <div className="flex-1 bg-muted/30 rounded-full h-2">
+                        <div
+                          className={`h-full rounded-full ${passwordStrength.color} transition-all duration-500`}
+                          style={{ width: `${(passwordStrength.strength / 6) * 100}%` }}
+                        ></div>
+                      </div>
+                      <span className="text-xs text-muted-foreground font-medium">{passwordStrength.label}</span>
+                    </div>
+                  </div>
+                )}
+                
+                {errors.password && (
+                  <p className="text-red-400 text-sm mt-2 flex items-center space-x-1">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>{errors.password}</span>
+                  </p>
+                )}
               </div>
-            )}
-            
-            {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
-          </div>
 
-          {/* Confirmar contraseña */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {mode === 'create' ? 'Confirmar Contraseña *' : 'Confirmar Nueva Contraseña'}
-            </label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type={showConfirmPassword ? 'text' : 'password'}
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.confirmPassword ? 'border-red-300' : 
-                  formData.confirmPassword && formData.password === formData.confirmPassword ? 'border-green-300' : 'border-gray-300'
-                }`}
-                placeholder="Repite la contraseña"
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
+              {/* Confirmar contraseña */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  {mode === 'create' ? 'Confirmar Contraseña *' : 'Confirmar Nueva Contraseña'}
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className={`w-full pl-10 pr-12 py-3 bg-background/50 border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all ${
+                      errors.confirmPassword ? 'border-red-500/50 bg-red-500/5' : 
+                      formData.confirmPassword && formData.password === formData.confirmPassword ? 'border-green-500/50 bg-green-500/5' : 'border-border/50'
+                    }`}
+                    placeholder="Repite la contraseña"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                {errors.confirmPassword && (
+                  <p className="text-red-400 text-sm mt-2 flex items-center space-x-1">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>{errors.confirmPassword}</span>
+                  </p>
+                )}
+                {formData.confirmPassword && formData.password === formData.confirmPassword && !errors.confirmPassword && (
+                  <p className="text-green-400 text-sm mt-2 flex items-center space-x-1">
+                    <CheckCircle2 className="w-3 h-3" />
+                    <span>Las contraseñas coinciden</span>
+                  </p>
+                )}
+              </div>
             </div>
-            {errors.confirmPassword && <p className="text-red-600 text-sm mt-1">{errors.confirmPassword}</p>}
-            {formData.confirmPassword && formData.password === formData.confirmPassword && !errors.confirmPassword && (
-              <p className="text-green-600 text-sm mt-1">Las contraseñas coinciden</p>
-            )}
           </div>
         </div>
       </div>
 
       {/* Permisos */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium text-gray-900">Permisos y Configuración</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          
-          {/* Rol */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Rol del Usuario *
-            </label>
-            <div className="relative">
-              <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <select
-                name="role_id"
-                value={formData.role_id}
-                onChange={handleChange}
-                disabled={isLoadingRoles}
-                className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.role_id ? 'border-red-300' : 'border-gray-300'
-                }`}
-              >
-                <option value="">Selecciona un rol</option>
-                {roles.map(role => (
-                  <option key={role.id} value={role.id}>
-                    {role.display_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {errors.role_id && <p className="text-red-600 text-sm mt-1">{errors.role_id}</p>}
-            {errors.roles && <p className="text-red-600 text-sm mt-1">{errors.roles}</p>}
-          </div>
+      <div className="space-y-6">
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent rounded-xl blur-xl"></div>
+          <div className="relative bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-6">
+            <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center space-x-2">
+              <Shield className="w-5 h-5 text-primary" />
+              <span>Permisos y Configuración</span>
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              {/* Rol */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Rol del Usuario *
+                </label>
+                <div className="relative">
+                  <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <select
+                    name="role_id"
+                    value={formData.role_id}
+                    onChange={handleChange}
+                    disabled={isLoadingRoles}
+                    className={`w-full pl-10 pr-4 py-3 bg-background/50 border rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all ${
+                      errors.role_id ? 'border-red-500/50 bg-red-500/5' : 'border-border/50'
+                    }`}
+                  >
+                    <option value="">Selecciona un rol</option>
+                    {roles.map(role => (
+                      <option key={role.id} value={role.id}>
+                        {role.display_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {errors.role_id && (
+                  <p className="text-red-400 text-sm mt-2 flex items-center space-x-1">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>{errors.role_id}</span>
+                  </p>
+                )}
+                {errors.roles && (
+                  <p className="text-red-400 text-sm mt-2 flex items-center space-x-1">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>{errors.roles}</span>
+                  </p>
+                )}
+              </div>
 
-          {/* Estado */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Estado de la Cuenta
-            </label>
-            <div className="flex items-center space-x-3 pt-2">
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="is_active"
-                  checked={formData.is_active}
-                  onChange={handleChange}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">Cuenta activa</span>
-              </label>
+              {/* Estado */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Estado de la Cuenta
+                </label>
+                <div className="flex items-center space-x-3 pt-3">
+                  <label className="flex items-center space-x-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="is_active"
+                      checked={formData.is_active}
+                      onChange={handleChange}
+                      className="rounded border-border text-primary focus:ring-primary/50"
+                    />
+                    <span className="text-sm text-foreground">Cuenta activa</span>
+                  </label>
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Los usuarios inactivos no podrán iniciar sesión
+                </p>
+              </div>
             </div>
-            <p className="text-xs text-gray-500 mt-1">
-              Los usuarios inactivos no podrán iniciar sesión
-            </p>
           </div>
         </div>
       </div>
 
-      {/* Botones */}
-      <div className="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+      {/* Botones elegantes */}
+      <div className="flex items-center justify-end space-x-4 pt-6 border-t border-border/50">
         <button
           type="button"
           onClick={onCancel}
-          className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+          className="px-6 py-3 border border-border/50 text-foreground rounded-xl hover:bg-accent/50 transition-all duration-200"
         >
           Cancelar
         </button>
@@ -679,11 +742,11 @@ export function UserForm({ mode, user, onSuccess, onCancel }: UserFormProps) {
         <button
           type="submit"
           disabled={isLoading || isCheckingUsername || isCheckingEmail}
-          className="flex items-center space-x-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg font-medium transition-colors"
+          className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary disabled:from-primary/50 disabled:to-primary/50 text-primary-foreground rounded-xl font-medium transition-all duration-300 hover:scale-105 disabled:scale-100"
         >
           {isLoading ? (
             <>
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary-foreground/20 border-t-primary-foreground"></div>
               <span>{mode === 'create' ? 'Creando...' : 'Actualizando...'}</span>
             </>
           ) : (

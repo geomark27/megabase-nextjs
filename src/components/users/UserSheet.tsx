@@ -2,6 +2,7 @@
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { UserForm } from "./UserForm"
+import { Sparkles, UserPlus, Edit } from "lucide-react"
 
 /**
  * Tipos para el UserSheet
@@ -32,13 +33,12 @@ interface UserSheetProps {
 }
 
 /**
- * UserSheet Component
+ * UserSheet Component con diseño elegante
  * 
  * Sheet lateral para crear y editar usuarios
- * - Reutilizable para create y edit
- * - Se abre desde la derecha
- * - Formulario responsivo
- * - Actualización automática de la lista
+ * - Aplicando el estilo armonioso del dashboard
+ * - Efectos glassmorphism y gradientes
+ * - Animaciones suaves
  */
 export function UserSheet({ 
   open, 
@@ -61,29 +61,56 @@ export function UserSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent 
         side="right" 
-        className="w-[600px] sm:max-w-[600px] overflow-y-auto p-0"
+        className="w-[600px] sm:max-w-[600px] overflow-y-auto p-0 bg-background/95 backdrop-blur-sm border-border/50"
       >
-        {/* Header del Sheet */}
-        <SheetHeader className="p-6 pb-4 border-b border-gray-200">
-          <SheetTitle className="text-xl font-semibold text-gray-900">
-            {mode === 'create' ? 'Crear Nuevo Usuario' : `Editar Usuario`}
-          </SheetTitle>
-          <SheetDescription className="text-gray-600">
-            {mode === 'create' 
-              ? 'Completa la información para crear una nueva cuenta de usuario.' 
-              : `Modifica la información de ${user?.name || 'este usuario'}.`
-            }
-          </SheetDescription>
-        </SheetHeader>
+        {/* Header elegante del Sheet */}
+        <div className="relative">
+          {/* Efecto de brillo sutil en el header */}
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-primary/10 blur-2xl"></div>
+          
+          <SheetHeader className="relative p-6 pb-4 border-b border-border/50 bg-card/30 backdrop-blur-sm">
+            <div className="flex items-center space-x-4">
+              {/* Icono con gradiente */}
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                mode === 'create' 
+                  ? 'bg-gradient-to-br from-green-500/20 to-green-600/20' 
+                  : 'bg-gradient-to-br from-blue-500/20 to-blue-600/20'
+              }`}>
+                {mode === 'create' ? (
+                  <UserPlus className={`w-6 h-6 ${mode === 'create' ? 'text-green-400' : 'text-blue-400'}`} />
+                ) : (
+                  <Edit className="w-6 h-6 text-blue-400" />
+                )}
+              </div>
+              
+              <div>
+                <SheetTitle className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                  {mode === 'create' ? 'Crear Nuevo Usuario' : `Editar Usuario`}
+                </SheetTitle>
+                <SheetDescription className="text-muted-foreground mt-1">
+                  {mode === 'create' 
+                    ? 'Completa la información para crear una nueva cuenta de usuario.' 
+                    : `Modifica la información de ${user?.name || 'este usuario'}.`
+                  }
+                </SheetDescription>
+              </div>
+            </div>
+          </SheetHeader>
+        </div>
         
-        {/* Contenido del formulario */}
-        <div className="p-6">
-          <UserForm 
-            mode={mode}
-            user={user}
-            onSuccess={handleSuccess}
-            onCancel={handleCancel}
-          />
+        {/* Contenido del formulario con fondo elegante */}
+        <div className="relative">
+          {/* Gradiente sutil de fondo */}
+          <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background to-background/90"></div>
+          
+          <div className="relative p-6">
+            <UserForm 
+              mode={mode}
+              user={user}
+              onSuccess={handleSuccess}
+              onCancel={handleCancel}
+            />
+          </div>
         </div>
       </SheetContent>
     </Sheet>
