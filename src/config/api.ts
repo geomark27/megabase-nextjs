@@ -58,6 +58,14 @@ export const API_ENDPOINTS = {
         getById: (id: string | number) => `/users/${id}`,
         updateById: (id: string | number) => `/users/${id}`,
         deleteById: (id: string | number) => `/users/${id}`,
+
+        // 🆕 Endpoints simples
+        checkUsername: '/users/check-username',
+        checkEmail: '/users/check-email',
+        
+        // 🆕 O con helpers (recomendado)
+        checkUsernameUrl: (username: string) => `/users/check-username?username=${encodeURIComponent(username)}`,
+        checkEmailUrl: (email: string) => `/users/check-email?email=${encodeURIComponent(email)}`,
     },
     
     // Endpoints de roles

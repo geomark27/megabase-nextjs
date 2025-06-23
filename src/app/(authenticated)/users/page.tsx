@@ -8,41 +8,39 @@ import {
   Search, 
   Filter, 
   Edit, 
-  Trash2, 
-  Eye,
+  Trash2,
   MoreVertical,
   Shield,
   CheckCircle,
   XCircle
 } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { useAuthenticatedUser } from '../layout'
 import { api } from '@/lib/axios'
+import { getErrorMessage } from '@/lib/axios'
 import { type User as UserType } from '@/services/authService'
+import { UserSheet } from '@/components/users/UserSheet'
 
 /**
  * Interfaz para usuarios de la lista
- * Extiende el tipo base con información adicional necesaria para la gestión
  */
 interface UserListItem extends UserType {
-  // Aquí podrías agregar propiedades adicionales específicas para la lista
-  // como estadísticas de actividad, última conexión, etc.
+  // Propiedades adicionales si las necesitas
 }
 
 /**
- * Página de gestión de usuarios
+ * Página de gestión de usuarios CON SHEET Y DROPDOWN MENU
  * 
- * Esta página permite:
- * - Ver lista completa de usuarios del sistema
- * - Buscar y filtrar usuarios
- * - Crear nuevos usuarios
- * - Editar usuarios existentes
- * - Activar/desactivar usuarios
- * - Eliminar usuarios (con confirmación)
- * 
- * Utiliza la infraestructura compartida:
- * - AuthGuard (automático por el layout)
- * - Navbar (automático por el layout)
- * - Contexto de usuario autenticado
+ * Mejoras en esta versión:
+ * - Dropdown menu limpio para acciones
+ * - Solo Editar y Eliminar (sin redundancias)
+ * - Cambio de estado desde el formulario de edición
+ * - UI más profesional y menos saturada
  */
 export default function UsersPage() {
   // Estados para la gestión de la página
@@ -53,10 +51,15 @@ export default function UsersPage() {
   const [selectedRole, setSelectedRole] = useState<string>('all')
   const [showInactive, setShowInactive] = useState(false)
 
-  // Estados para acciones en usuarios
-  const [actionLoading, setActionLoading] = useState<{ [key: number]: boolean }>({})
+  // 🔧 Estados simplificados para acciones (solo delete)
+  const [deleteLoading, setDeleteLoading] = useState<{ [key: number]: boolean }>({})
   
-  // Acceso al contexto y navegación
+  // Estados para el Sheet
+  const [sheetOpen, setSheetOpen] = useState(false)
+  const [sheetMode, setSheetMode] = useState<'create' | 'edit'>('create')
+  const [editingUser, setEditingUser] = useState<UserListItem | null>(null)
+  
+  // Acceso al contexto
   const { user: currentUser } = useAuthenticatedUser()
   const router = useRouter()
 
@@ -69,7 +72,6 @@ export default function UsersPage() {
 
   /**
    * Función para cargar usuarios desde la API
-   * Incluye manejo de filtros y parámetros de búsqueda
    */
   const loadUsers = async () => {
     try {
@@ -79,7 +81,7 @@ export default function UsersPage() {
       // Construir parámetros de query
       const params = new URLSearchParams()
       if (!showInactive) {
-        params.append('include_inactive', 'false')
+        params.append('include_inactive', 'true')
       }
       if (selectedRole !== 'all') {
         params.append('role_id', selectedRole)
@@ -87,21 +89,16 @@ export default function UsersPage() {
 
       console.log('🔄 Cargando usuarios con parámetros:', params.toString())
 
-      // Hacer petición a la API
       const response = await api.get(`/users?${params.toString()}`)
       
       console.log('📥 Respuesta completa del servidor:', response.data)
       
-      // Corregir: verificar response.data.status === 'success' en lugar de response.data.success
       if (response.data.status === 'success') {
-        // Los usuarios están en response.data.data.users
         const userData = response.data.data
         const usersList = userData?.users || []
         setUsers(usersList)
         console.log('✅ Usuarios cargados:', usersList.length, 'usuarios')
-        console.log('📊 Datos completos:', userData)
         
-        // Si no hay usuarios, mostrar información para debugging
         if (usersList.length === 0) {
           console.log('⚠️ No se encontraron usuarios. Estructura de respuesta:', {
             status: response.data.status,
@@ -116,51 +113,40 @@ export default function UsersPage() {
       }
     } catch (err: any) {
       console.error('❌ Error en la petición:', err)
-      console.error('❌ Detalles del error:', {
-        message: err.message,
-        status: err.status,
-        data: err.data,
-        isApiError: err.isApiError,
-        isNetworkError: err.isNetworkError
-      })
-      setError(err.message || 'Error de conexión al cargar usuarios')
+      setError(getErrorMessage(err))
     } finally {
       setIsLoading(false)
     }
   }
 
   /**
-   * Función para alternar el estado activo/inactivo de un usuario
+   * Abrir sheet para crear usuario
    */
-  const toggleUserStatus = async (userId: number, currentStatus: boolean) => {
-    try {
-      setActionLoading(prev => ({ ...prev, [userId]: true }))
-
-      // Hacer petición para actualizar el estado
-      const response = await api.patch(`/users/${userId}`, {
-        is_active: !currentStatus
-      })
-
-      // Usar la misma verificación de status
-      if (response.data.status === 'success') {
-        // Actualizar la lista local
-        setUsers(prev => prev.map(user => 
-          user.id === userId 
-            ? { ...user, is_active: !currentStatus }
-            : user
-        ))
-        console.log(`✅ Usuario ${userId} ${!currentStatus ? 'activado' : 'desactivado'}`)
-      }
-    } catch (err: any) {
-      console.error('❌ Error actualizando estado del usuario:', err)
-      setError(`Error al ${!currentStatus ? 'activar' : 'desactivar'} usuario`)
-    } finally {
-      setActionLoading(prev => ({ ...prev, [userId]: false }))
-    }
+  const openCreateSheet = () => {
+    setSheetMode('create')
+    setEditingUser(null)
+    setSheetOpen(true)
   }
 
   /**
-   * Función para eliminar un usuario (con confirmación)
+   * Abrir sheet para editar usuario
+   */
+  const openEditSheet = (user: UserListItem) => {
+    setSheetMode('edit')
+    setEditingUser(user)
+    setSheetOpen(true)
+  }
+
+  /**
+   * Manejar éxito del sheet (crear/editar)
+   */
+  const handleSheetSuccess = () => {
+    loadUsers() // Recargar la lista de usuarios
+    console.log(`✅ ${sheetMode === 'create' ? 'Usuario creado' : 'Usuario actualizado'} - Lista actualizada`)
+  }
+
+  /**
+   * 🔧 Función simplificada para eliminar usuario
    */
   const deleteUser = async (userId: number, userName: string) => {
     if (!confirm(`¿Estás seguro de que quieres eliminar al usuario "${userName}"? Esta acción no se puede deshacer.`)) {
@@ -168,21 +154,19 @@ export default function UsersPage() {
     }
 
     try {
-      setActionLoading(prev => ({ ...prev, [userId]: true }))
+      setDeleteLoading(prev => ({ ...prev, [userId]: true }))
 
       const response = await api.delete(`/users/${userId}`)
 
-      // Usar la misma verificación de status
       if (response.data.status === 'success') {
-        // Remover de la lista local
         setUsers(prev => prev.filter(user => user.id !== userId))
         console.log(`✅ Usuario ${userName} eliminado`)
       }
     } catch (err: any) {
       console.error('❌ Error eliminando usuario:', err)
-      setError(`Error al eliminar usuario: ${err.message}`)
+      setError(`Error al eliminar usuario: ${getErrorMessage(err)}`)
     } finally {
-      setActionLoading(prev => ({ ...prev, [userId]: false }))
+      setDeleteLoading(prev => ({ ...prev, [userId]: false }))
     }
   }
 
@@ -198,13 +182,6 @@ export default function UsersPage() {
     return matchesSearch
   })
 
-  /**
-   * Función para navegar a diferentes páginas
-   */
-  const navigateTo = (path: string) => {
-    router.push(path)
-  }
-
   return (
     <div className="p-6">
       {/* Header de la página */}
@@ -219,7 +196,7 @@ export default function UsersPage() {
           
           {/* Botón para crear usuario */}
           <button
-            onClick={() => navigateTo('/users/create')}
+            onClick={openCreateSheet}
             className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
           >
             <UserPlus className="w-5 h-5" />
@@ -229,7 +206,7 @@ export default function UsersPage() {
       </div>
 
       {/* Controles de búsqueda y filtros */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+      <div className="bg-card rounded-lg shadow-sm border border-border p-6 mb-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0 lg:space-x-4">
           
           {/* Búsqueda */}
@@ -295,7 +272,7 @@ export default function UsersPage() {
       )}
 
       {/* Tabla de usuarios */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-card rounded-lg shadow-sm border border-border overflow-hidden">
         
         {/* Loading state */}
         {isLoading ? (
@@ -313,7 +290,7 @@ export default function UsersPage() {
             </p>
             {!searchTerm && (
               <button
-                onClick={() => navigateTo('/users/create')}
+                onClick={openCreateSheet}
                 className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
               >
                 <UserPlus className="w-4 h-4" />
@@ -402,56 +379,45 @@ export default function UsersPage() {
                       }
                     </td>
 
-                    {/* Acciones */}
+                    {/* 🆕 Acciones con Dropdown Menu limpio */}
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex items-center justify-end space-x-2">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button
+                            className="inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            disabled={deleteLoading[user.id]}
+                          >
+                            {deleteLoading[user.id] ? (
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
+                            ) : (
+                              <MoreVertical className="w-4 h-4" />
+                            )}
+                          </button>
+                        </DropdownMenuTrigger>
                         
-                        {/* Ver usuario */}
-                        <button
-                          onClick={() => navigateTo(`/users/${user.id}`)}
-                          className="text-gray-400 hover:text-gray-600"
-                          title="Ver detalles"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
+                        <DropdownMenuContent align="end" className="w-48">
+                          
+                          {/* Editar usuario */}
+                          <DropdownMenuItem
+                            onClick={() => openEditSheet(user)}
+                            className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 cursor-pointer"
+                          >
+                            <Edit className="w-4 h-4" />
+                            <span>Editar usuario</span>
+                          </DropdownMenuItem>
 
-                        {/* Editar usuario */}
-                        <button
-                          onClick={() => navigateTo(`/users/${user.id}/edit`)}
-                          className="text-blue-600 hover:text-blue-700"
-                          title="Editar usuario"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-
-                        {/* Activar/Desactivar usuario */}
-                        <button
-                          onClick={() => toggleUserStatus(user.id, user.is_active)}
-                          disabled={actionLoading[user.id] || user.id === currentUser?.id}
-                          className={`${
-                            user.is_active 
-                              ? 'text-red-600 hover:text-red-700' 
-                              : 'text-green-600 hover:text-green-700'
-                          } disabled:opacity-50`}
-                          title={user.is_active ? 'Desactivar usuario' : 'Activar usuario'}
-                        >
-                          {user.is_active ? (
-                            <XCircle className="w-4 h-4" />
-                          ) : (
-                            <CheckCircle className="w-4 h-4" />
-                          )}
-                        </button>
-
-                        {/* Eliminar usuario */}
-                        <button
-                          onClick={() => deleteUser(user.id, user.name)}
-                          disabled={actionLoading[user.id] || user.id === currentUser?.id}
-                          className="text-red-600 hover:text-red-700 disabled:opacity-50"
-                          title="Eliminar usuario"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
+                          {/* Eliminar usuario */}
+                          <DropdownMenuItem
+                            onClick={() => deleteUser(user.id, user.name)}
+                            disabled={user.id === currentUser?.id}
+                            className="flex items-center space-x-2 text-gray-700 hover:text-red-600 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                            <span>Eliminar usuario</span>
+                          </DropdownMenuItem>
+                          
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </td>
                   </tr>
                 ))}
@@ -468,6 +434,15 @@ export default function UsersPage() {
           {searchTerm && ` (filtrado por "${searchTerm}")`}
         </div>
       )}
+
+      {/* Sheet Component */}
+      <UserSheet
+        open={sheetOpen}
+        onOpenChange={setSheetOpen}
+        mode={sheetMode}
+        user={editingUser}
+        onSuccess={handleSheetSuccess}
+      />
     </div>
   )
 }
