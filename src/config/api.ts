@@ -76,6 +76,51 @@ export const API_ENDPOINTS = {
         updateById: (id: string | number) => `/roles/${id}`,
         deleteById: (id: string | number) => `/roles/${id}`,
     },
+
+    // 🆕 Endpoints de ciudadanos/contribuyentes
+    citizens: {
+        // CRUD básico siguiendo el mismo patrón que users y roles
+        list: '/citizens',
+        create: '/citizens',
+        getById: (id: string | number) => `/citizens/${id}`,
+        updateById: (id: string | number) => `/citizens/${id}`,
+        deleteById: (id: string | number) => `/citizens/${id}`,
+
+        // Búsquedas especializadas para contribuyentes ecuatorianos
+        // Estas son críticas para un sistema fiscal ya que permiten buscar por los datos únicos oficiales
+        getByEmail: (email: string) => `/citizens/email/${encodeURIComponent(email)}`,
+        getByIdentification: (numero: string) => `/citizens/identification/${encodeURIComponent(numero)}`,
+        getByRazonSocial: (razonSocial: string) => `/citizens/razon-social/${encodeURIComponent(razonSocial)}`,
+
+        // Verificaciones de disponibilidad para validación en tiempo real
+        // Estos endpoints son perfectos para formularios interactivos que validan mientras el usuario escribe
+        checkIdentificationAvailable: (numero: string) => `/citizens/check/identification/${encodeURIComponent(numero)}`,
+        checkEmailAvailable: (email: string) => `/citizens/check/email/${encodeURIComponent(email)}`,
+        checkRazonSocialAvailable: (razonSocial: string) => `/citizens/check/razon-social/${encodeURIComponent(razonSocial)}`,
+
+        // Helper para construir URLs con filtros de búsqueda complejos
+        // Este es especialmente útil para las funcionalidades de filtrado avanzado
+        listWithFilters: (filters: {
+            tipo_identificacion?: string,
+            estado_contribuyente?: string,
+            regimen?: string,
+            pais?: string,
+            provincia?: string,
+            ciudad?: string,
+            obligado_contabilidad?: string,
+            page?: number,
+            page_size?: number
+        }) => {
+            const params = new URLSearchParams();
+            Object.entries(filters).forEach(([key, value]) => {
+                if (value !== undefined && value !== null && value !== '') {
+                    params.append(key, value.toString());
+                }
+            });
+            const queryString = params.toString();
+            return `/citizens${queryString ? `?${queryString}` : ''}`;
+        }
+    },
     
     // Endpoint de salud del sistema
     health: '/health',
