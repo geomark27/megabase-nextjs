@@ -79,15 +79,21 @@ export default function AuthenticatedNavbar({ user, onUserUpdate }: Authenticate
     {
       name: 'Usuarios',
       path: '/users',
-      icon: Users,
+      icon: User,
       description: 'Gestionar usuarios del sistema'
+    },
+    {
+      name: 'Ciudadanos',
+      path: '/citizens', // La ruta que acabas de crear
+      icon: Users,       // El ícono que quieres usar
+      description: 'Gestionar ciudadanos del sistema'
     },
     {
       name: 'Roles',
       path: '/roles',
       icon: Shield,
       description: 'Configurar roles y permisos'
-    }
+    },
   ]
 
   const userMenuItems = [
