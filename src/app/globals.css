@@ -43,163 +43,240 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* TEMA CLARO (Light Mode) */
+/* ========================================
+   TEMA CLARO (Light Mode) - OPTIMIZADO
+   ======================================== */
 :root {
   --radius: 0.625rem;
   
-  /* Colores principales */
-  --background: oklch(83.591% 0.0001 271.152);                     /* Blanco puro */
-  --foreground: oklch(0.145 0 0);                 /* Negro para texto */
+  /* Colores principales - Limpios y profesionales */
+  --background: #ffffff;                          /* Blanco puro para máximo contraste */
+  --foreground: #0a0a0a;                         /* Negro suave para legibilidad */
   
-  /* Tarjetas */
-  --card: oklch(1 0 0);                           /* Blanco para tarjetas */
-  --card-foreground: oklch(0.145 0 0);            /* Negro para texto en tarjetas */
+  /* Tarjetas - Contraste sutil pero visible */
+  --card: #ffffff;                               /* Blanco para tarjetas */
+  --card-foreground: #0a0a0a;                   /* Negro para texto en tarjetas */
   
   /* Popover */
-  --popover: oklch(1 0 0);                        /* Blanco para popovers */
-  --popover-foreground: oklch(0.145 0 0);         /* Negro para texto en popovers */
+  --popover: #ffffff;                            /* Blanco consistente */
+  --popover-foreground: #0a0a0a;                /* Negro consistente */
   
-  /* Primario */
-  --primary: oklch(0.205 0 0);                    /* Color primario oscuro */
-  --primary-foreground: oklch(0.985 0 0);         /* Texto sobre primario */
+  /* Primario - Azul profesional y accesible */
+  --primary: #2563eb;                           /* Blue-600 - profesional y visible */
+  --primary-foreground: #ffffff;                /* Blanco sobre primario */
   
-  /* Secundario */
-  --secondary: oklch(0.97 0 0);                   /* Gris muy claro */
-  --secondary-foreground: oklch(0.205 0 0);       /* Texto sobre secundario */
+  /* Secundario - Gris neutro y versátil */
+  --secondary: #f1f5f9;                         /* Slate-100 - gris muy claro */
+  --secondary-foreground: #0f172a;              /* Slate-900 - contraste perfecto */
   
-  /* Silenciado */
-  --muted: oklch(0.97 0 0);                       /* Gris claro */
-  --muted-foreground: oklch(0.556 0 0);           /* Gris medio para texto silenciado */
+  /* Silenciado - Tonos intermedios balanceados */
+  --muted: #f8fafc;                             /* Slate-50 - casi blanco */
+  --muted-foreground: #64748b;                  /* Slate-500 - gris medio legible */
   
-  /* Acento */
-  --accent: oklch(0.97 0 0);                      /* Gris claro para acentos */
-  --accent-foreground: oklch(0.205 0 0);          /* Texto sobre acentos */
+  /* Acento - Para elementos interactivos */
+  --accent: #f1f5f9;                            /* Slate-100 - consistente con secondary */
+  --accent-foreground: #0f172a;                 /* Slate-900 - texto oscuro */
   
-  /* Destructivo */
-  --destructive: oklch(0.577 0.245 27.325);       /* Rojo para acciones destructivas */
+  /* Destructivo - Rojo accesible y claro */
+  --destructive: #dc2626;                       /* Red-600 - visible pero no agresivo */
+  --destructive-foreground: #ffffff;            /* Blanco sobre rojo */
   
-  /* Bordes e inputs */
-  --border: oklch(0.922 0 0);                     /* Gris claro para bordes */
-  --input: oklch(0.922 0 0);                      /* Gris claro para inputs */
-  --ring: oklch(0.708 0 0);                       /* Gris medio para rings */
+  /* Bordes e inputs - Sutiles pero definidos */
+  --border: #e2e8f0;                            /* Slate-200 - bordes suaves */
+  --input: #e2e8f0;                             /* Slate-200 - consistente */
+  --ring: #2563eb;                              /* Blue-600 - coincide con primary */
   
-  /* Charts */
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  /* Charts - Paleta profesional y distinguible */
+  --chart-1: #3b82f6;                           /* Blue-500 */
+  --chart-2: #10b981;                           /* Emerald-500 */
+  --chart-3: #f59e0b;                           /* Amber-500 */
+  --chart-4: #ef4444;                           /* Red-500 */
+  --chart-5: #8b5cf6;                           /* Violet-500 */
   
-  /* Sidebar */
-  --sidebar: oklch(0.985 0 0);                    /* Casi blanco para sidebar */
-  --sidebar-foreground: oklch(0.145 0 0);         /* Negro para texto en sidebar */
-  --sidebar-primary: oklch(0.205 0 0);            /* Primario en sidebar */
-  --sidebar-primary-foreground: oklch(0.985 0 0); /* Texto sobre primario en sidebar */
-  --sidebar-accent: oklch(0.97 0 0);              /* Acento en sidebar */
-  --sidebar-accent-foreground: oklch(0.205 0 0);  /* Texto sobre acento en sidebar */
-  --sidebar-border: oklch(0.922 0 0);             /* Borde del sidebar */
-  --sidebar-ring: oklch(0.708 0 0);               /* Ring del sidebar */
+  /* Sidebar - Integrado harmoniosamente */
+  --sidebar: #ffffff;                           /* Blanco consistente */
+  --sidebar-foreground: #0a0a0a;               /* Negro consistente */
+  --sidebar-primary: #2563eb;                  /* Blue-600 consistente */
+  --sidebar-primary-foreground: #ffffff;       /* Blanco consistente */
+  --sidebar-accent: #f1f5f9;                   /* Slate-100 consistente */
+  --sidebar-accent-foreground: #0f172a;        /* Slate-900 consistente */
+  --sidebar-border: #e2e8f0;                   /* Slate-200 consistente */
+  --sidebar-ring: #2563eb;                     /* Blue-600 consistente */
 }
 
-/* TEMA OSCURO ELEGANTE (Dark Mode) - MÁS ARMONIOSO */
+/* ========================================
+   TEMA OSCURO (Dark Mode) - BALANCEADO
+   ======================================== */
 .dark {
-  /* Colores principales - Tonos más suaves y armoniosos */
-  --background: oklch(19.567% 0.01862 245.395);            /* Azul muy oscuro, más cálido */
-  --foreground: oklch(0.92 0.02 240);             /* Blanco ligeramente azulado */
+  /* Colores principales - Oscuros pero legibles */
+  --background: #020617;                        /* Slate-950 - muy oscuro pero no negro puro */
+  --foreground: #f8fafc;                        /* Slate-50 - blanco suave */
   
-  /* Tarjetas - Gradación sutil */
-  --card: oklch(0.11 0.02 240);                   /* Ligeramente más claro que el fondo */
-  --card-foreground: oklch(0.90 0.02 240);        /* Texto claro con tinte azul */
+  /* Tarjetas - Contraste sutil en modo oscuro */
+  --card: #0f172a;                              /* Slate-900 - más claro que background */
+  --card-foreground: #f8fafc;                  /* Slate-50 - consistente */
   
   /* Popover */
-  --popover: oklch(0.12 0.02 240);                /* Más claro para popovers */
-  --popover-foreground: oklch(0.90 0.02 240);     /* Texto consistente */
+  --popover: #0f172a;                           /* Slate-900 - consistente con cards */
+  --popover-foreground: #f8fafc;               /* Slate-50 - consistente */
   
-  /* Primario - Azul elegante */
-  --primary: oklch(0.65 0.15 240);                /* Azul vibrante pero suave */
-  --primary-foreground: oklch(0.95 0.01 240);     /* Texto claro sobre primario */
+  /* Primario - Azul más claro para modo oscuro */
+  --primary: #3b82f6;                           /* Blue-500 - más brillante en oscuro */
+  --primary-foreground: #f8fafc;               /* Slate-50 - texto claro */
   
-  /* Secundario - Gris azulado */
-  --secondary: oklch(0.15 0.02 240);              /* Gris oscuro con tinte azul */
-  --secondary-foreground: oklch(0.85 0.02 240);   /* Texto claro */
+  /* Secundario - Gris oscuro balanceado */
+  --secondary: #1e293b;                         /* Slate-800 - gris oscuro */
+  --secondary-foreground: #f8fafc;             /* Slate-50 - texto claro */
   
-  /* Silenciado - Tonos medios armoniosos */
-  --muted: oklch(0.13 0.02 240);                  /* Gris oscuro azulado */
-  --muted-foreground: oklch(0.55 0.03 240);       /* Gris medio con tinte */
+  /* Silenciado - Tonos medios para modo oscuro */
+  --muted: #1e293b;                             /* Slate-800 - consistente */
+  --muted-foreground: #94a3b8;                 /* Slate-400 - gris medio visible */
   
-  /* Acento - Hover states elegantes */
-  --accent: oklch(0.16 0.03 240);                 /* Ligeramente más claro para hover */
-  --accent-foreground: oklch(0.88 0.02 240);      /* Texto sobre acento */
+  /* Acento - Para hover states en modo oscuro */
+  --accent: #1e293b;                            /* Slate-800 - consistente */
+  --accent-foreground: #f8fafc;                /* Slate-50 - texto claro */
   
-  /* Destructivo - Rojo más suave */
-  --destructive: oklch(0.60 0.20 15);             /* Rojo coral elegante */
+  /* Destructivo - Rojo apropiado para modo oscuro */
+  --destructive: #ef4444;                       /* Red-500 - más brillante en oscuro */
+  --destructive-foreground: #f8fafc;           /* Slate-50 - texto claro */
   
-  /* Bordes e inputs - Sutiles pero visibles */
-  --border: oklch(0.18 0.02 240);                 /* Bordes sutiles azulados */
-  --input: oklch(0.14 0.02 240);                  /* Inputs ligeramente diferentes */
-  --ring: oklch(0.45 0.10 240);                   /* Ring azul suave */
+  /* Bordes e inputs - Visibles pero no intrusivos */
+  --border: #334155;                            /* Slate-700 - bordes visibles */
+  --input: #1e293b;                             /* Slate-800 - inputs diferenciados */
+  --ring: #3b82f6;                              /* Blue-500 - consistente con primary */
   
-  /* Charts - Colores vibrantes pero armoniosos */
-  --chart-1: oklch(0.70 0.18 50);                /* Amarillo dorado */
-  --chart-2: oklch(0.65 0.15 180);               /* Azul cyan */
-  --chart-3: oklch(0.60 0.12 280);               /* Púrpura */
-  --chart-4: oklch(0.68 0.16 120);               /* Verde esmeralda */
-  --chart-5: oklch(0.72 0.14 20);                /* Naranja coral */
+  /* Charts - Colores vibrantes para modo oscuro */
+  --chart-1: #60a5fa;                           /* Blue-400 - más claro para oscuro */
+  --chart-2: #34d399;                           /* Emerald-400 */
+  --chart-3: #fbbf24;                           /* Amber-400 */
+  --chart-4: #f87171;                           /* Red-400 */
+  --chart-5: #a78bfa;                           /* Violet-400 */
   
-  /* Sidebar - Integrado armoniosamente */
-  --sidebar: oklch(0.08 0.015 240);               /* Más oscuro que el fondo principal */
-  --sidebar-foreground: oklch(0.88 0.02 240);     /* Texto claro */
-  --sidebar-primary: oklch(0.65 0.15 240);        /* Azul primario */
-  --sidebar-primary-foreground: oklch(0.95 0.01 240); /* Texto sobre primario */
-  --sidebar-accent: oklch(0.14 0.02 240);         /* Acento sutil */
-  --sidebar-accent-foreground: oklch(0.85 0.02 240);  /* Texto sobre acento */
-  --sidebar-border: oklch(0.16 0.02 240);         /* Bordes sutiles */
-  --sidebar-ring: oklch(0.45 0.10 240);           /* Ring consistente */
+  /* Sidebar - Diferenciado pero armonioso */
+  --sidebar: #0f172a;                           /* Slate-900 - igual que cards */
+  --sidebar-foreground: #f8fafc;               /* Slate-50 - consistente */
+  --sidebar-primary: #3b82f6;                  /* Blue-500 - consistente */
+  --sidebar-primary-foreground: #f8fafc;       /* Slate-50 - consistente */
+  --sidebar-accent: #1e293b;                   /* Slate-800 - consistente */
+  --sidebar-accent-foreground: #f8fafc;        /* Slate-50 - consistente */
+  --sidebar-border: #334155;                   /* Slate-700 - consistente */
+  --sidebar-ring: #3b82f6;                     /* Blue-500 - consistente */
 }
 
-/* Transiciones suaves para el cambio de tema */
+/* ========================================
+   CONFIGURACIÓN BASE DEL BODY
+   ======================================== */
+
+/* Configuración global para transiciones suaves */
 * {
-  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
 
-/* Asegurar que el cuerpo tenga el color de fondo correcto */
+/* Configuración base del body */
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
+  font-feature-settings: "rlig" 1, "calt" 1;
+  margin: 0;
+  padding: 0;
 }
 
-/* Gradiente sutil para el fondo en modo dark */
-.dark body {
-  background: linear-gradient(135deg, 
-    oklch(0.09 0.015 240) 0%, 
-    oklch(0.085 0.02 250) 50%,
-    oklch(0.095 0.01 230) 100%);
-  background-attachment: fixed;
+/* ========================================
+   MEJORAS DE ACCESIBILIDAD
+   ======================================== */
+
+/* Mejor contraste para elementos de foco */
+*:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
 }
 
-/* Mejores shadows para modo dark */
-.dark .shadow-sm {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+/* Mejores estados hover para botones */
+button:hover {
+  opacity: 0.9;
 }
 
-.dark .shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+button:active {
+  transform: scale(0.98);
 }
 
-/* Glass effect para tarjetas en modo dark */
-.dark .bg-card {
-  background: oklch(0.11 0.02 240 / 0.8);
-  backdrop-filter: blur(8px);
-  border: 1px solid oklch(0.18 0.02 240 / 0.5);
+/* ========================================
+   SCROLLBAR PERSONALIZADO SUTIL
+   ======================================== */
+
+/* Scrollbar que se adapta al tema */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-/* Mejores hover effects */
-.dark button:hover,
-.dark .hover\:bg-accent:hover {
-  background: oklch(0.16 0.03 240 / 0.8);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.4);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.6);
+}
+
+/* ========================================
+   UTILIDADES ADICIONALES
+   ======================================== */
+
+/* Clase utilitaria para texto seleccionable con buen contraste */
+.select-text::selection {
+  background: hsl(var(--primary) / 0.2);
+  color: hsl(var(--primary-foreground));
+}
+
+/* Clase para mejorar la legibilidad de texto largo */
+.prose {
+  line-height: 1.7;
+  max-width: 65ch;
+}
+
+/* Separador visual sutil */
+.divider {
+  height: 1px;
+  background: hsl(var(--border));
+  margin: 1rem 0;
+}
+
+/* ========================================
+   ANIMACIONES BÁSICAS ÚTILES
+   ======================================== */
+
+/* Animación fade-in simple */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Animación slide-up básica */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s ease-out;
 }
