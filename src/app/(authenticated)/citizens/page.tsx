@@ -39,7 +39,7 @@ import {
 
 /**
  * Citizens Page - Vista principal para gestión de ciudadanos/contribuyentes
- * Diseño con estética glassmorphism consistente con users/page.tsx
+ * ✅ CORREGIDO: Manejo correcto de la respuesta del backend
  */
 export default function CitizensPage() {
   const router = useRouter()
@@ -54,7 +54,6 @@ export default function CitizensPage() {
   const [totalCitizens, setTotalCitizens] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(25)
-  const [totalPages, setTotalPages] = useState(0)
   
   // Estados de UI
   const [isLoading, setIsLoading] = useState(true)
@@ -84,6 +83,7 @@ export default function CitizensPage() {
 
   /**
    * Función principal para cargar ciudadanos
+   * ✅ CORREGIDO: Acceso correcto a la estructura de respuesta
    */
   const loadCitizens = async () => {
     try {
@@ -100,23 +100,28 @@ export default function CitizensPage() {
         ...(selectedProvincia !== 'all' && { provincia: selectedProvincia })
       }
 
-      console.log('🔍 Cargando ciudadanos con filtros:', filters)
+
 
       const response = await citizenService.getAllCitizens(filters)
 
-      if (response.success && response.data) {
-        setCitizens(response.data.citizens || [])
-        setTotalCitizens(response.data.total || 0)
-        setTotalPages(response.data.total_pages || 0)
+
+
+      if (response.success) {
+        // ✅ CORREGIDO: Acceso directo a la estructura normalizada
+        setCitizens(response.data || [])           // Array directo de ciudadanos
+        setTotalCitizens(response.count || 0)      // Total de registros
         
-        console.log('✅ Ciudadanos cargados:', response.data.citizens?.length)
+
       } else {
         setError('No se pudieron cargar los ciudadanos')
+        setCitizens([])
+        setTotalCitizens(0)
       }
     } catch (err) {
       console.error('❌ Error cargando ciudadanos:', err)
       setError(err instanceof Error ? err.message : 'Error desconocido')
       setCitizens([])
+      setTotalCitizens(0)
     } finally {
       setIsLoading(false)
     }
@@ -143,6 +148,8 @@ export default function CitizensPage() {
     setSelectedEstado('all')
     setSelectedProvincia('all')
     setCurrentPage(1)
+    // Recargar datos después de limpiar filtros
+    setTimeout(() => loadCitizens(), 100)
   }
 
   /**
@@ -189,8 +196,12 @@ export default function CitizensPage() {
       setDeleteLoading(prev => ({ ...prev, [citizenId]: true }))
 
       await citizenService.deleteCitizen(citizenId)
+      
+      // Actualizar la lista local removiendo el ciudadano eliminado
       setCitizens(prev => prev.filter(citizen => citizen.id !== citizenId))
-      console.log(`✅ Ciudadano ${citizenName} eliminado`)
+      setTotalCitizens(prev => prev - 1)
+      
+
     } catch (err: any) {
       console.error('❌ Error eliminando ciudadano:', err)
       setError(`Error al eliminar ciudadano: ${err.message}`)
@@ -200,7 +211,7 @@ export default function CitizensPage() {
   }
 
   /**
-   * Filtrar ciudadanos basado en búsqueda
+   * Filtrar ciudadanos basado en búsqueda local
    */
   const filteredCitizens = citizens.filter(citizen => {
     if (searchTerm === '') return true
@@ -221,9 +232,8 @@ export default function CitizensPage() {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/95">
       <div className="p-6 max-w-7xl mx-auto">
         
-        {/* Header elegante - Replicando estilo de users */}
+        {/* Header elegante */}
         <div className="mb-8 relative">
-          {/* Efecto de brillo sutil */}
           <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 rounded-2xl blur-3xl"></div>
           
           <div className="relative bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-6">
@@ -265,7 +275,7 @@ export default function CitizensPage() {
           </div>
         </div>
 
-        {/* Controles de búsqueda y filtros elegantes - Replicando estilo */}
+        {/* Controles de búsqueda y filtros elegantes */}
         <div className="relative group mb-6">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent rounded-xl blur-xl"></div>
           <div className="relative bg-card/80 backdrop-blur-sm rounded-xl shadow-sm border border-border/50 p-6 hover:shadow-lg transition-all duration-300">
@@ -417,7 +427,7 @@ export default function CitizensPage() {
           </div>
         )}
 
-        {/* Estadísticas rápidas - Replicando estilo de users */}
+        {/* Estadísticas rápidas */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           
           {/* Total ciudadanos */}
@@ -427,8 +437,8 @@ export default function CitizensPage() {
               <div className="flex items-center space-x-3">
                 <Users className="w-8 h-8 text-blue-400" />
                 <div>
-                  <p className="text-2xl font-bold text-foreground">{filteredCitizens.length}</p>
-                  <p className="text-sm text-muted-foreground">Ciudadanos mostrados</p>
+                  <p className="text-2xl font-bold text-foreground">{totalCitizens}</p>
+                  <p className="text-sm text-muted-foreground">Total ciudadanos</p>
                 </div>
               </div>
             </div>
@@ -477,7 +487,7 @@ export default function CitizensPage() {
           </div>
         </div>
 
-        {/* Tabla de ciudadanos elegante - Replicando estilo de users */}
+        {/* Tabla de ciudadanos elegante */}
         <div className="relative group">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent rounded-xl blur-xl"></div>
           <div className="relative bg-card/80 backdrop-blur-sm rounded-xl shadow-sm border border-border/50 overflow-hidden hover:shadow-lg transition-all duration-300">

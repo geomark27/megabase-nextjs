@@ -33,17 +33,7 @@ import {
 
 /**
  * NewCitizenPage - Formulario inteligente para crear nuevos ciudadanos/contribuyentes
- * 
- * Este componente implementa un formulario adaptativo que se transforma
- * según el tipo de contribuyente seleccionado. Es como un "camaleón digital"
- * que cambia su apariencia y comportamiento según el contexto.
- * 
- * Características clave:
- * - Renderizado condicional basado en tipo de identificación
- * - Validaciones en tiempo real usando el backend
- * - Interfaz glassmorphism consistente con el resto de la aplicación
- * - Manejo inteligente de errores y estados de carga
- * - Experiencia de usuario guiada paso a paso
+ * ✅ CORREGIDO: Manejo correcto de respuestas del backend
  */
 export default function NewCitizenPage() {
   const router = useRouter()
@@ -165,9 +155,7 @@ export default function NewCitizenPage() {
     try {
       setValidatingIdentification(true)
       const response = await citizenService.checkIdentificationAvailability(numero_identificacion)
-      
-      const available = response.available;
-      
+      const available = response.available
       setIdentificationAvailable(available)
       
       if (!available) {
@@ -191,9 +179,10 @@ export default function NewCitizenPage() {
       setValidatingEmail(true)
       const response = await citizenService.checkEmailAvailability(formData.email)
       
-      setEmailAvailable(response.data.available)
+      const available = response.available
+      setEmailAvailable(available)
       
-      if (!response.data.available) {
+      if (!available) {
         setErrors(prev => ({ 
           ...prev, 
           email: 'Este email ya está registrado' 
@@ -222,9 +211,10 @@ export default function NewCitizenPage() {
       setValidatingRazonSocial(true)
       const response = await citizenService.checkRazonSocialAvailability(formData.razon_social)
       
-      setRazonSocialAvailable(response.data.available)
+      const available = response.available
+      setRazonSocialAvailable(available)
       
-      if (!response.data.available) {
+      if (!available) {
         setErrors(prev => ({ 
           ...prev, 
           razon_social: 'Esta razón social ya está registrada' 
@@ -360,6 +350,7 @@ export default function NewCitizenPage() {
 
   /**
    * Enviar formulario
+   * ✅ CORREGIDO: Acceso correcto a la respuesta del backend
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -376,7 +367,17 @@ export default function NewCitizenPage() {
       const response = await citizenService.createCitizen(formData)
 
       if (response.success) {
-        console.log('✅ Ciudadano creado exitosamente:', response.data.citizen.id)
+        // ✅ CORREGIDO: El citizen está directamente en response.data
+        console.log('✅ Ciudadano creado exitosamente:', response.data.id)
+        
+        // Mostrar mensaje de éxito (opcional)
+        setErrors(prev => {
+          const newErrors = { ...prev }
+          delete newErrors.general
+          return newErrors
+        })
+        
+        // Redirigir a la lista de ciudadanos
         router.push('/citizens')
       }
     } catch (error: any) {
